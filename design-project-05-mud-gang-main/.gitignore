@@ -1,0 +1,5 @@
+# Don't track from these folders
+.vscode/
+# Don't track from these files
+*.class
+*.data
