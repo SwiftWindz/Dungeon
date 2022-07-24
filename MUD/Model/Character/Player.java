@@ -5,14 +5,11 @@ import java.util.List;
 
 import MUD.Model.DayNight.Visitor;
 import MUD.Model.Inventory.*;
-import MUD.Model.Map.Direction;
 import MUD.Model.Map.Door;
 import MUD.Model.Map.Map;
 import MUD.Model.Map.Room;
 import MUD.Model.Map.Tile;
 import MUD.Model.Map.Trap;
-import MUD.Model.Map.Vertex;
-import MUD.Model.Map.*;
 import MUD.View.PTUI;
 
 /**
@@ -31,37 +28,17 @@ public class Player extends Character {
     // The players equipped buffs
     private List<BuffItem> equippedBuffs;
     // The room the player is in
-    private Vertex<Room> currentVertex;
+    private Room currentRoom;
     // The tile the player is currently on
     private Tile currentTile;
     // The map the player resides in
     private Map map;
-    //total monsters slain on player
-    private int totalMonstersSlain;
-    //total gold on player
-    private Integer gold;
-    //total items found on player
-    private int totalItemsFound;
-
-    private boolean hasPrayed;
   
     public Player(String name, String description, double maxHealth, double attack, double defense, Map map) {
         super(name, description, maxHealth, attack, defense);
         this.equippedBuffs = new ArrayList<>();
         this.inventory = new Inventory();
         this.map = map;
-        this.totalMonstersSlain = 0;
-        this.gold = 0;
-        this.totalItemsFound = 0;
-    }
-
-    public Player(Player player) {
-        super(player.getName(), player.getDescription(), player.getMaxHealth(), player.getMaxHealth(), player.getDefense());
-            this.equippedBuffs = player.equippedBuffs;
-            this.inventory = player.inventory;
-            this.map = new Map(2, null);
-            this.currentVertex = player.currentVertex;
-            this.currentTile = player.currentTile;
     }
 
     public List<BuffItem> getEquippedBuffs() {
@@ -193,7 +170,6 @@ public class Player extends Character {
             //Look for first bag with available space
             if (bag.hasSpace()) {
                 bag.addItem(item);
-                this.totalItemsFound++;
                 break;
             }
 
@@ -237,16 +213,16 @@ public class Player extends Character {
         v.visitPlayer(this);
     }
 
-    public void setVertex(Vertex<Room> r){
-        currentVertex = r;
+    public void setRoom(Room r){
+        currentRoom = r;
     }
 
     public void setTile(Tile t){
         currentTile = t;
     }
 
-    public Vertex<Room> getCurrentVertex() {
-        return currentVertex;
+    public Room getRoom(){
+        return currentRoom;
     }
 
     public Tile getCurrentTile() {
@@ -257,14 +233,14 @@ public class Player extends Character {
         List<Tile> adjacentTiles = new ArrayList<>();
         int currentRow = currentTile.getRow();
         int currentCol = currentTile.getCol();
-        adjacentTiles.add(currentVertex.getValue().getContents()[currentRow+1][currentCol]);
-        adjacentTiles.add(currentVertex.getValue().getContents()[currentRow+1][currentCol-1]);
-        adjacentTiles.add(currentVertex.getValue().getContents()[currentRow][currentCol-1]);
-        adjacentTiles.add(currentVertex.getValue().getContents()[currentRow-1][currentCol-1]);
-        adjacentTiles.add(currentVertex.getValue().getContents()[currentRow-1][currentCol]);
-        adjacentTiles.add(currentVertex.getValue().getContents()[currentRow-1][currentCol+1]);
-        adjacentTiles.add(currentVertex.getValue().getContents()[currentRow][currentCol+1]);
-        adjacentTiles.add(currentVertex.getValue().getContents()[currentRow+1][currentCol+1]);
+        adjacentTiles.add(currentRoom.getContents()[currentRow+1][currentCol]);
+        adjacentTiles.add(currentRoom.getContents()[currentRow+1][currentCol-1]);
+        adjacentTiles.add(currentRoom.getContents()[currentRow][currentCol-1]);
+        adjacentTiles.add(currentRoom.getContents()[currentRow-1][currentCol-1]);
+        adjacentTiles.add(currentRoom.getContents()[currentRow-1][currentCol]);
+        adjacentTiles.add(currentRoom.getContents()[currentRow-1][currentCol+1]);
+        adjacentTiles.add(currentRoom.getContents()[currentRow][currentCol+1]);
+        adjacentTiles.add(currentRoom.getContents()[currentRow+1][currentCol+1]);
         return adjacentTiles;
     }
 
@@ -272,8 +248,12 @@ public class Player extends Character {
         return inventory;
     }
 
-    public void setCurrentVertex(Vertex<Room> currentVertex) {
-        this.currentVertex = currentVertex;
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
+    public Room getCurrentRoom() {
+        return currentRoom;
     }
 
     public void setCurrentTile(Tile currentTile) {
@@ -284,44 +264,22 @@ public class Player extends Character {
         return map;
     }
 
-    public void setMap(Map map) {
-        this.map = map;
-    }
-
     public void move(Tile t){
-        Door mockDoor = new Door("name", "description", Direction.Right);
+        Door mockDoor = new Door("name", "description", "right");
         Trap mockTrap = new Trap(0, "name", "description");
-        if(t.isGoal()){
-            PTUI.win();
-        }
         if(t.hasEntity(mockDoor)){
             Door door = (Door)t.getOccupant();
-            int[] coords = currentVertex.getCoordinate();
-            if(door.getSide().equals(Direction.Right)){
-                int[] tcoords = {coords[0] + 1, coords[1]};
-                setCurrentVertex(currentVertex.getVertexAtCoordinate(tcoords));
-                setCurrentTile(currentVertex.getValue().getContents()[4][1]);
-                map.generateNeighbors(currentVertex);
+            if(currentRoom.isGoal()){
+                PTUI.win();
             }
-            else if(door.getSide().equals(Direction.Left)){
-                int[] tcoords = {coords[0] - 1, coords[1]};
-                setCurrentVertex(currentVertex.getVertexAtCoordinate(tcoords));
-                setCurrentTile(currentVertex.getValue().getContents()[4][7]);
-                map.generateNeighbors(currentVertex);
+            else if(door.getSide().equals("right")){
+                setCurrentRoom(map.getContents()[currentRoom.getRoomNumber() + 1]);
+                setCurrentTile(currentRoom.getContents()[4][1]);
             }
-            else if(door.getSide().equals(Direction.Up)){
-                int[] tcoords = {coords[0], coords[1] + 1};
-                setCurrentVertex(currentVertex.getVertexAtCoordinate(tcoords));
-                setCurrentTile(currentVertex.getValue().getContents()[7][4]);
-                map.generateNeighbors(currentVertex);
+            else{
+                setCurrentRoom(map.getContents()[currentRoom.getRoomNumber() - 1]);
+                setCurrentTile(currentRoom.getContents()[4][7]);
             }
-            else if(door.getSide().equals(Direction.Down)){
-                int[] tcoords = {coords[0], coords[1] - 1};
-                setCurrentVertex(currentVertex.getVertexAtCoordinate(tcoords));
-                setCurrentTile(currentVertex.getValue().getContents()[1][4]);
-                map.generateNeighbors(currentVertex);
-            }
-            map.populate();
         }
         else if(t.hasEntity(mockTrap)){
             Trap tr = (Trap)t.getOccupant();
@@ -336,61 +294,6 @@ public class Player extends Character {
         else{
             setCurrentTile(t);
         }
-    }
-    public void setGold(Integer amount){
-        this.gold = amount;
-    }
-
-    public Integer getGold(){
-        return this.gold;
-    }
-
-    public void buyItem(Item item){
-        this.pickupItem(item);
-        this.gold -= item.getValue();
-    }
-
-    public void sellItem(Item item, Merchant buyer){
-        buyer.buyItem(item);
-        removeItemFromInventory(item);
-        this.gold += (Integer) (item.getValue() / 2);
-    }
-
-    public PlayerState createState(){
-        //I actually don't know if this is the proper way to get the player attributes since it's a subclass
-        return new PlayerState(this.getName(), this.getDescription(), this.getMaxHealth(), this.getAttack(), this.getDefense(), this.map);
-    }
-
-    public void pray(Shrine shrine){
-        Shrine.currentState = createState();
-        this.hasPrayed = true;
-        shrine.setPrayerStatus(true);
-        Shrine.room = currentVertex;
-    }
-
-    public void restore(){
-        currentVertex = Shrine.room;
-
-    }
-
-    public boolean getPrayed(){
-        return this.hasPrayed;
-    }
-
-    public int getTotalMonstersSlain() {
-        return totalMonstersSlain;
-    }
-
-    public void setTotalMonstersSlain(int totalMonstersSlain) {
-        this.totalMonstersSlain = totalMonstersSlain;
-    }
-
-    public int getTotalItemsFound() {
-        return totalItemsFound;
-    }
-
-    public void setTotalItemsFound(int totalItemsFound) {
-        this.totalItemsFound = totalItemsFound;
     }
 
 }

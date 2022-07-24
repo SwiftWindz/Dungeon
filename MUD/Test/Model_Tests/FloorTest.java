@@ -12,14 +12,14 @@ public class FloorTest {
 
     @Test
     public void MapCreation() {
-        Map m = new Map(2, null);
+        Map m = new Map(2);
         assertEquals(2, m.getNumberOfRooms());
 
     }
 
     @Test
     public void PopulationTest() {
-        Map m = new Map(2, null);
+        Map m = new Map(2);
 
         m.populate();
 

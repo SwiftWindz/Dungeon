@@ -16,7 +16,7 @@ public class Day implements Time, Serializable{
     //used to send a visitor to the map in order to affect NPCs and notify the player
     @Override
     public void SendVisit(Visitor visitor, Player player) {
-        Room room = player.getCurrentVertex().getValue();
+        Room room = player.getRoom();
         Tile tiles[][] = room.getContents();
         for (Tile row[] : tiles){
         	for (Tile tile : row) {

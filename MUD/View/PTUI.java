@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
+
 import MUD.Save;
 import MUD.Controller.Action;
 import MUD.Controller.Attack;
@@ -17,13 +18,10 @@ import MUD.Controller.Disarm;
 import MUD.Controller.Interpreter;
 import MUD.Controller.Move;
 import MUD.Controller.Open;
-import MUD.Controller.Pray;
-import MUD.Controller.Talk;
 import MUD.Controller.Use;
 import MUD.Model.Character.Bedtime;
 import MUD.Model.Character.Behavior;
 import MUD.Model.Character.Character;
-import MUD.Model.Character.Merchant;
 import MUD.Model.Character.NPC;
 import MUD.Model.Character.Player;
 import MUD.Model.DayNight.DayNightCycle;
@@ -34,7 +32,6 @@ import MUD.Model.Inventory.Item;
 import MUD.Model.Map.Chest;
 import MUD.Model.Map.Obstacle;
 import MUD.Model.Map.Room;
-import MUD.Model.Map.Shrine;
 import MUD.Model.Map.Tile;
 import MUD.Model.Map.Trap;
 
@@ -56,17 +53,9 @@ public class PTUI implements Serializable  {
         findValidMoves();
     }
 
-    public static boolean getHasWon() {
-        return hasWon;
-    }
-
     public static void win(){
         hasWon = true;
         System.out.println("Congradulations! You reached the Goal!");
-    }
-
-    public java.util.Map<String, Interpreter> getValidMoves() {
-        return validMoves;
     }
 
     public void findValidMoves(){
@@ -78,10 +67,8 @@ public class PTUI implements Serializable  {
         Trap mockTrap = new Trap(1, "name", "description");
         ArrayList<Item> mockItems = new ArrayList<>();
         Chest mockChest = new Chest("name", "description", mockItems);
-        Character mockNPC = new NPC("name", "description", 1, 1, 1, Behavior.Hostile, Bedtime.Diurnal, "");
+        Character mockNPC = new NPC("name", "description", 1, 1, 1, Behavior.Hostile, Bedtime.Diurnal);
         Obstacle mockObstacle = new Obstacle("name", "description");
-        Shrine mockShrine = new Shrine(1, 1);
-        Merchant mockMerchant = new Merchant("name", "description", 0);
 
         //run through all adjacent tiles and list every possible action that can be taken with them
         for(Tile t : adjacentTiles){
@@ -96,12 +83,6 @@ public class PTUI implements Serializable  {
                 Action attack = new Attack(player, target);
                 Interpreter interpreter = new Interpreter(attack);
                 validMoves.put("Attack " + target.getName(), interpreter);
-            }
-            else if(t.hasEntity(mockMerchant)){
-                Merchant merchant = (Merchant)t.getOccupant();
-                Action talk = new Talk(player, merchant);
-                Interpreter interpreter = new Interpreter(talk);
-                validMoves.put("Talk to " + merchant.getName(), interpreter);
             }
             else if(t.hasEntity(mockTrap)){
                 Trap trap = (Trap)t.getOccupant();
@@ -127,25 +108,15 @@ public class PTUI implements Serializable  {
                 Interpreter interpreter = new Interpreter(move);
                 validMoves.put("Move to " + t.getRow() + ", " + t.getCol(), interpreter);
             }
-            else if(t.hasEntity(mockShrine)){
-                Shrine s = (Shrine)t.getOccupant();
-                Action pray = new Pray(player, s);
-                Interpreter interpreter = new Interpreter(pray);
-                validMoves.put("Pray at Shrine", interpreter);
-            }
             else if(!t.hasEntity(mockObstacle)){
                 Action move = new Move(player, t);
                 Interpreter interpreter = new Interpreter(move);
                 validMoves.put("Move to " + t.getRow() + ", " + t.getCol(), interpreter);
             }
-            
         }
 
         Inventory inventory = player.getInventory();
         for(Bag b : inventory.getInventory()){
-            if(b == null){
-                continue;
-            }
             for(Item i : b.getItems()){
                 Action use = new Use(player, i);
                 Interpreter interpreter = new Interpreter(use);
@@ -166,7 +137,7 @@ public class PTUI implements Serializable  {
 
         List<Tile> adjacentTiles = player.getAdjacentTiles();
 
-        Character mockNPC = new NPC("name", "description", 1, 1, 1, Behavior.Hostile, Bedtime.Diurnal, "");
+        Character mockNPC = new NPC("name", "description", 1, 1, 1, Behavior.Hostile, Bedtime.Diurnal);
 
         for(Tile t : adjacentTiles){
             if(t.hasEntity(mockNPC)){
@@ -185,7 +156,7 @@ public class PTUI implements Serializable  {
     }
 
     public void displayRoom(){
-        Room currentRoom = player.getCurrentVertex().getValue();
+        Room currentRoom = player.getRoom();
         Tile[][] roomTiles = currentRoom.getContents();
         for(int i = 0; i < currentRoom.getHeight(); i++){
             for(int j = 0; j < currentRoom.getWidth(); j++){
@@ -211,23 +182,6 @@ public class PTUI implements Serializable  {
             return "error";
         }
         return command;
-    }
-
-    public boolean makeMove(String userCommand) {
-        if(validateMove(userCommand)) {
-            System.out.println("\033[H\033[2J");
-            validMoves.get(userCommand).invoke();
-            List<BuffItem> buffs = player.getEquippedBuffs();
-            for(int index = 0; index < buffs.size(); index++) {
-                BuffItem buff = buffs.get(index);
-                buff.decreaseTurnsLeft();
-                if (buff.isTurnsLeftZero()) {
-                    player.removeBuff(buff);
-                }
-            }
-            return true;
-        }
-        return false;
     }
 
     public void runUi(){
@@ -269,7 +223,17 @@ public class PTUI implements Serializable  {
                 }
                 break;
             }
-            if(makeMove(userCommand)) {
+            if(validateMove(userCommand)){
+                System.out.println("\033[H\033[2J");
+                validMoves.get(userCommand).invoke();
+                List<BuffItem> buffs = player.getEquippedBuffs();
+                for(int index = 0; index < buffs.size(); index++){
+                    BuffItem buff = buffs.get(index);
+                    buff.decreaseTurnsLeft();
+                    if (buff.isTurnsLeftZero()) {
+                        player.removeBuff(buff);
+                    }
+                }
                 // Clears the screen each time a command is run to make it look cleaner
                 System.out.flush();
                 dnCycle.changeTime();

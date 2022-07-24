@@ -19,8 +19,6 @@ public class NPC extends Character {
 
     private Tile home;
 
-    private String sprite;
-
     /**
      * Constructor for an NPC.
      * @param name The name of the NPC.
@@ -32,13 +30,12 @@ public class NPC extends Character {
      * @param bedtime The bedtime of the NPC.
      */
     public NPC(String name, String description, double maxHealth, double attack,
-    double defense, Behavior behavior, Bedtime bedtime, String sprite) {
+    double defense, Behavior behavior, Bedtime bedtime) {
        
         super(name, description, maxHealth, attack, defense);
         this.behavior = behavior;
         this.bedtime = bedtime;
         this.home = null;
-        this.sprite = sprite;
 
     }
 
@@ -67,10 +64,6 @@ public class NPC extends Character {
 
     public Tile getHome() {
         return home;
-    }
-
-    public String getSprite() {
-        return sprite;
     }
     
 }

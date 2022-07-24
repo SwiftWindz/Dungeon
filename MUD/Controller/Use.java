@@ -18,7 +18,6 @@ public class Use implements Action, Serializable{
     @Override
     public void execute() {
         target.useItem(player);
-        player.removeItemFromInventory(target);
     }
     
 }

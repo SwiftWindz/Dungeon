@@ -7,6 +7,6 @@ package MUD.Model.Character;
  */
 public enum Behavior {
 
-    Hostile,
-    Docile
+    Hostile
+    
 }

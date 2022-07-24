@@ -26,7 +26,7 @@ public class DayNightCycleTests {
 
         // Create a new NPC.
         NPC npc = new NPC("Test Dummy", "Test Dummy", 10.0, 10.0, 10.0,
-        Behavior.Hostile, Bedtime.Diurnal, "");
+        Behavior.Hostile, Bedtime.Diurnal);
 
         // Create a new day visitor.
         Visitor dayVisitor = new DayVisitor();
@@ -47,7 +47,7 @@ public class DayNightCycleTests {
     public void dayVisitorTest2(){
         // Create a new NPC.
         NPC npc = new NPC("Test Dummy", "Test Dummy", 10.0, 10.0, 10.0,
-        Behavior.Hostile, Bedtime.Nocturnal, "");
+        Behavior.Hostile, Bedtime.Nocturnal);
 
         // Create a new day visitor.
         Visitor dayVisitor = new DayVisitor();
@@ -69,7 +69,7 @@ public class DayNightCycleTests {
 
         // Create a new NPC.
         NPC npc = new NPC("Test Dummy", "Test Dummy", 10.0, 10.0, 10.0,
-        Behavior.Hostile, Bedtime.Diurnal, "");
+        Behavior.Hostile, Bedtime.Diurnal);
 
         // Create a new day visitor.
         Visitor nightVisitor = new NightVisitor();
@@ -90,7 +90,7 @@ public class DayNightCycleTests {
     public void nightVisitorTest2(){
         // Create a new NPC.
         NPC npc = new NPC("Test Dummy", "Test Dummy", 10.0, 10.0, 10.0,
-        Behavior.Hostile, Bedtime.Nocturnal, "");
+        Behavior.Hostile, Bedtime.Nocturnal);
 
         // Create a new day visitor.
         Visitor nightVisitor = new NightVisitor();

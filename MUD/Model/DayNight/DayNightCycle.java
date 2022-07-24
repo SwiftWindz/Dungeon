@@ -22,7 +22,7 @@ public class DayNightCycle implements Serializable {
 
     public DayNightCycle(Player player){
         this.currentTime = new Day();
-        this.cycleTime = 300;
+        this.cycleTime = 15;
         this.player = player;
     }
 

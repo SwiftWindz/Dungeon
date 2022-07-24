@@ -16,7 +16,7 @@ public class CharacterTest {
     @Test
     public void NPCinstantiationTest() {
 
-        NPC chr = new NPC("Test", "Test", 100, 100, 100, null, null, "");
+        NPC chr = new NPC("Test", "Test", 100, 100, 100, null, null);
         String name = chr.getName();
         String description = chr.getDescription();
         double maxHealth = chr.getMaxHealth();
@@ -42,8 +42,8 @@ public class CharacterTest {
      */
     public void NPCAttackTest() {
 
-        NPC chr1 = new NPC("Banana", "Test Dummy", 100, 10, 0, null, null, "");
-        NPC chr2 = new NPC("Pudding", "Test Dummy", 100, 10.5, 0, null, null, "");
+        NPC chr1 = new NPC("Banana", "Test Dummy", 100, 10, 0, null, null);
+        NPC chr2 = new NPC("Pudding", "Test Dummy", 100, 10.5, 0, null, null);
 
         chr1.attack(chr2);
         chr2.attack(chr1);
@@ -59,8 +59,8 @@ public class CharacterTest {
      */
     public void NPCAttackTest2() {
 
-        NPC chr1 = new NPC("Banana", "Test Dummy", 100, 10, 5, null, null, "");
-        NPC chr2 = new NPC("Pudding", "Test Dummy", 100, 10.5, 5, null, null, "");
+        NPC chr1 = new NPC("Banana", "Test Dummy", 100, 10, 5, null, null);
+        NPC chr2 = new NPC("Pudding", "Test Dummy", 100, 10.5, 5, null, null);
 
         chr1.attack(chr2);
         chr2.attack(chr1);
@@ -76,8 +76,8 @@ public class CharacterTest {
      */
     public void NPCAttackTest3() {
 
-        NPC chr1 = new NPC("Banana", "Test Dummy", 100, 10, 15, null, null, "");
-        NPC chr2 = new NPC("Pudding", "Test Dummy", 100, 10.5, 15, null, null, "");
+        NPC chr1 = new NPC("Banana", "Test Dummy", 100, 10, 15, null, null);
+        NPC chr2 = new NPC("Pudding", "Test Dummy", 100, 10.5, 15, null, null);
 
         chr1.attack(chr2);
         chr2.attack(chr1);

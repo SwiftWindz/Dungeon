@@ -34,7 +34,7 @@ public class DayVisitor implements Visitor, Serializable {
     @Override
     public void visitPlayer(Player player) {
         String note = "It has become day";
-        Room room = player.getCurrentVertex().getValue();
+        Room room = player.getRoom();
         Tile[][] tiles = room.getContents();
         for (Tile row[] : tiles){
         	for (Tile tile : row) {

@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Nathan Perez
  */
 public class Tile implements MapElement, Serializable {
-    protected String contents = ".";
+    private String contents = ".";
     private Object occupant;
     private int row;
     private int col;
@@ -21,13 +21,6 @@ public class Tile implements MapElement, Serializable {
         col = c;
     }
 
-    public Tile(int r, int c, String contents){
-        row = r;
-        col = c;
-        this.contents = contents;
-        //TODO: figure out what the fuck im doing here
-
-    }
     /**
      * Method to search for a given entity in a Tile.
      * @param entity: The entity to be searched for.
@@ -83,5 +76,4 @@ public class Tile implements MapElement, Serializable {
     public int getRow() {
         return row;
     }
-
 }

@@ -21,7 +21,7 @@ public class Load {
      */
     public Load(String saveName) throws FileNotFoundException, IOException, ClassNotFoundException {
 
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(saveName)));
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("MUD\\Saves\\" + saveName + ".data")));
         this.ptui = (PTUI) ois.readObject();
 
     }
