@@ -28,7 +28,6 @@ public class BuffItem extends Item{
     @Override
     public void useItem(Player player){
         player.equipBuff(this);
-        player.removeItemFromInventory(this);
     }
 
     public BuffType getBuffType() {

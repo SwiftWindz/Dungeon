@@ -6,12 +6,14 @@ import java.util.Scanner;
 import MUD.Model.Character.Player;
 import MUD.Model.DayNight.DayNightCycle;
 import MUD.Model.Map.Map;
+import MUD.Model.Map.PremadeMaps.DiffEnum;
+import MUD.Model.Map.PremadeMaps.PremadeGenerator;
 import MUD.View.PTUI;
 // import MUD.Model.DayNight.DayNightCycle;
 
 public class Driver {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // Clears the screen at the start of the game.
         System.out.println("\033[H\033[2J");
         System.out.println(
@@ -56,7 +58,8 @@ public class Driver {
                         break;
                     }
                     try {
-                        Load load = new Load(saveName);
+                        String path = "MUD\\Saves\\" + saveName + ".data";
+                        Load load = new Load(path);
                         PTUI ptui = load.getPtui();
                         ptui.getDnCycle().startCycle();
                         ptui.runUi();
@@ -74,8 +77,10 @@ public class Driver {
 
             } else {
                 System.out.flush();
-                Map map = new Map(2);
-                map.populate();
+                //Map map = new Map(2);
+                //map.populate();
+                PremadeGenerator pg = new PremadeGenerator(DiffEnum.NORMAL);
+                Map map = pg.generate();
                 Player player = new Player("You", "The player", 100, 10, 0, map);
                 
                 // Intro
@@ -92,8 +97,8 @@ public class Driver {
                 System.out.println("\033[H\033[2J");
                 System.out.flush();
 
-                player.setCurrentRoom(map.getContents()[0]);
-                player.setCurrentTile(player.getCurrentRoom().getContents()[1][1]);
+                player.setCurrentVertex(map.getStartRoom());
+                player.setCurrentTile(player.getCurrentVertex().getValue().getContents()[1][1]);
                 DayNightCycle dnCycle = new DayNightCycle(player);
                 dnCycle.startCycle();
                 PTUI ptui = new PTUI(player, dnCycle);

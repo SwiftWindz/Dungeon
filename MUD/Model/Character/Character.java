@@ -9,7 +9,7 @@ import MUD.Model.DayNight.Visitor;
  * element stereotype for the Visitor pattern. 
  * @author Phil Ganem
  */
-public abstract class Character implements Serializable {
+public abstract class Character {
 
     // Name of the character. This is displayed to the user
     private String name; 
@@ -74,7 +74,7 @@ public abstract class Character implements Serializable {
     public void takeDamage(double trueDamageTaken) {
         // Calculate the damage taken after defense
         double damageTaken;
-        if(this.defense >= trueDamageTaken){damageTaken = 0;} 
+        if(this.defense >= trueDamageTaken){damageTaken = 1;} 
         else{damageTaken = trueDamageTaken - this.defense;}
         // Sets the current health to the current health minus the damage taken.
         double newHealth = this.currentHealth - damageTaken;

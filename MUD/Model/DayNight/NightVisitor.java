@@ -34,7 +34,7 @@ public class NightVisitor implements Visitor, Serializable{
     @Override
     public void visitPlayer(Player player) {
     	String note = "It has become night";
-        Room room = player.getRoom();
+        Room room = player.getCurrentVertex().getValue();
         Tile[][] tiles = room.getContents();
         for (Tile row[] : tiles){
         	for (Tile tile : row) {

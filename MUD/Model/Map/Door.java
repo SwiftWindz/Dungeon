@@ -10,14 +10,14 @@ public class Door implements TileElement, Serializable{
 
     private final String name;
     private final String description;
-    private final String side;
+    private final Direction side;
 
     /**
      * Constructor for the Door class.
      * @param name Name of the Door object.
      * @param description Description of the Door object.
      */
-    public Door(String name, String description, String side){
+    public Door(String name, String description, Direction side){
         this.name = name;
         this.description = description;
         this.side = side;
@@ -29,7 +29,7 @@ public class Door implements TileElement, Serializable{
         return this.name + " | " + this.description;
     }
 
-    public String getSide() {
+    public Direction getSide() {
         return side;
     }
 

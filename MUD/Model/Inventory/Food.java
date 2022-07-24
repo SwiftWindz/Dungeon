@@ -29,7 +29,7 @@ public class Food extends Item {
      * Uses the food to restore the player's health.
      * @param player The player who is using the food.
      */
-    public void useItem(Player player){
+    public void useItem(Player player) {
         player.eat(this);
     }
 

@@ -27,7 +27,6 @@ public class Weapon extends Item  {
     @Override
     public void useItem(Player player){
         player.equipWeapon(this);
-        player.removeItemFromInventory(this);
     }
     
 // ----------- Getters and Setters ------------
